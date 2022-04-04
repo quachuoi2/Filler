@@ -6,33 +6,11 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 07:52:46 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/03 18:44:02 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/04 19:29:18 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-
-void	get_drawing(t_drawing *drawing, char *line, int fd, int type)
-{
-	int		i;
-
-	i = 0;
-	while(!ft_isdigit(line[i]))
-		i++;
-	drawing->y = ft_atoi(line + i);
-	while(line[i] != ' ')
-		i++;
-	i++;
-	drawing->x = ft_atoi(line + i);
-	drawing->layout = (char **)malloc(sizeof(char *) * (drawing->y + type));
-	i = 0;
-	while (i < drawing->y + type)
-	{
-		get_next_line(0, drawing->layout + i);
-		ft_printf("$0%s\n", fd, drawing->layout[i]);
-		i++;
-	}
-}
 
 void	get_char(char *line, t_players_specs *player)
 {
@@ -78,15 +56,23 @@ void	get_position(t_drawing *map, t_players_specs *player)
 	}
 }
 
-int	check_condition(int n, int map_x, char piece, char map)
+void	free_bundle(t_drawing *drawing, int type)
 {
-	if (n <= map_x && piece == '*')
+	int	i;
+
+	i = 0;
+/* 	while (i < drawing->y + type)
 	{
-		if (map == 'O')
-			return (1);
-		else if (map != '.')
-			return (0);
-		return (-1);
-	}
-	return (-1);
+		free(drawing->layout[i]);
+		drawing->layout[i] = NULL; // WHY DOES THIS CAUSE SEGFAULT ???
+		i++;
+	} */
+	ft_memdel((void **)&drawing->layout);
+}
+
+void	assigner(t_search_range *a, t_search_range *b)
+{
+	a->start = b->start;
+	a->increment = b->increment;
+	a->end = b->end;
 }

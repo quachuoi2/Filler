@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 21:30:09 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/03 18:32:06 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/04 18:21:50 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,13 @@ typedef	struct s_search_range
 
 
 //algo.c
-void	place_token(t_drawing *map, t_drawing *piece, t_players_specs *player);
+int		place_token(t_drawing *map, t_drawing *piece, t_players_specs *player, int fd);
 
 //utilities.c
-void	get_drawing(t_drawing *drawing, char *line, int fd, int type);
 void	get_position(t_drawing *map, t_players_specs *player);
 void	get_char(char *line, t_players_specs *player);
 int		check_condition(int x, int mx, char piece, char map);
+void	free_bundle(t_drawing *drawing, int type);
+void	assigner(t_search_range *a, t_search_range *b);
+
 #endif

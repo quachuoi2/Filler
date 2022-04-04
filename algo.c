@@ -6,54 +6,40 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 02:31:09 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/03 18:58:57 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/04 17:10:00 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-int	try_spot(t_drawing *map, t_drawing *piece, int y, int x)
+int	try_spot(t_drawing *map, t_drawing *piece, t_search_range *axis, char p_c)
 {
 	int	i;
 	int	i2;
 	int	counter;
-	int	temp;
 
 	i = -1;
 	counter = 0;
 	while (++i < piece->y)
 	{
 		i2 = -1;
-		if (y + i <= map->y)
+		while (++i2 < piece->x)
 		{
-			while (++i2 < piece->x)
+			if (axis[0].start + i <= map->y && axis[1].start + i2 <= map->x + 3)
 			{
-				temp = check_condition(x + i2, map->x + 3,
-						piece->layout[i][i2], map->layout[y + i][x + i2]);
-				if (temp == 1)
-					counter++;
-				else if (!temp)
-					return (0);
+				if (piece->layout[i][i2] == '*')
+				{
+					if (map->layout[axis[0].start + i][axis[1].start + i2] == p_c)
+						counter++;
+					else if (map->layout[axis[0].start + i][axis[1].start + i2] != '.')
+						return (0);
+				}
 			}
+			else if (piece->layout[i][i2] == '*')
+				return (0);
 		}
 	}
 	return (counter == 1);
-}
-
-void	set_searching_parameter(int me, int enemy, t_search_range *r, int map)
-{
-	if (me < enemy)
-	{
-		r->start = map;
-		r->end = 0;
-		r->increment = -1;
-	}
-	else
-	{
-		r->start = 0;
-		r->end = map;
-		r->increment = 1;
-	}
 }
 
 int	get_piece_length_width(t_drawing *piece)
@@ -72,42 +58,71 @@ int	get_piece_length_width(t_drawing *piece)
 		width = 0;
 		i2 = -1;
 		while (++i2 < piece->x)
-		{
 			if (piece->layout[i][i2] == '*')
 				width++;
-		}
 		max_width = ft_greaternum(max_width, width);
 		if (width)
 			max_length++;
 	}
-	return (max_width > max_length);
+	return (max_length > max_width);
 }
 
-void	place_token(t_drawing *map, t_drawing *piece, t_players_specs *player)
+void	set_axis_direction(int me, int enemy, t_search_range *r, int map)
+{
+	if (me < enemy)
+	{
+		r->start = map;
+		r->end = 0;
+		r->increment = -1;
+	}
+	else
+	{
+		r->start = 0;
+		r->end = map;
+		r->increment = 1;
+	}
+}
+
+void	set_axis_paramenter(t_drawing *piece, t_search_range *y, t_search_range *x, t_search_range *axis)
+{
+	if (get_piece_length_width(piece))
+	{
+		assigner(axis + 0, y);
+		assigner(axis + 1, x);
+	}
+	else
+	{
+		assigner(axis + 0, x);
+		assigner(axis + 1, y);
+	}
+}
+
+int	place_token(t_drawing *map, t_drawing *piece, t_players_specs *player, int fd)
 {
 	t_search_range	y;
 	t_search_range	x;
-	int				temp;
-	int				search_type;
+	t_search_range	axis[2];
+	int				temp_start;
 
-	set_searching_parameter(player[0].y, player[1].y, &y, map->y);
-	set_searching_parameter(player[0].x, player[1].x, &x, map->x + 3);
-	search_type = get_piece_length_width(piece);
-	temp = x.start;
-	while (y.start != y.end)
+	set_axis_direction(player[0].y, player[1].y, &y, map->y);
+	set_axis_direction(player[0].x, player[1].x, &x, map->x + 3);
+	set_axis_paramenter(piece, &y, &x, axis);
+	temp_start = axis[1].start;
+	while (axis[0].start != axis[0].end)
 	{
-		x.start = temp;
-		while (x.start != x.end)
+		axis[1].start = temp_start;
+		while (axis[1].start != axis[1].end)
 		{
-			if (try_spot(map, piece, y.start, x.start))
+			if (try_spot(map, piece, axis, player[0].c))
 			{
-				ft_printf("%d %d\n", y.start - 1, x.start - 4);
-				return ;
+				ft_printf("%d %d\n", axis[0].start - 1, axis[1].start - 4);
+				return (1);
 			}
-			x.start += x.increment;
+			axis[1].start += axis[1].increment;
 		}
-		y.start += y.increment;
+		axis[0].start += axis[0].increment;
 	}
+	return (0);
 }
 
 //if token's width is larger than length, try vertically before horizontally
