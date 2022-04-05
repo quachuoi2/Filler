@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 07:52:46 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/04 19:29:18 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/05 20:37:12 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	get_char(char *line, t_players_specs *player)
 {
-	if (ft_strstr(line, "qnguyen"));
+	if (ft_strstr(line, "qnguyen"))
 	{
-		if (ft_strchr(line, '1'))
+		if (line[10] == '1')
 		{
 			player[0].c = 'O';
 			player[1].c = 'X';
@@ -56,17 +56,16 @@ void	get_position(t_drawing *map, t_players_specs *player)
 	}
 }
 
-void	free_bundle(t_drawing *drawing, int type)
+void	free_drawing(t_drawing *drawing, int type)
 {
 	int	i;
 
 	i = 0;
-/* 	while (i < drawing->y + type)
+	while (i < drawing->y + type)
 	{
-		free(drawing->layout[i]);
-		drawing->layout[i] = NULL; // WHY DOES THIS CAUSE SEGFAULT ???
+		ft_memdel((void **)(drawing->layout + i));
 		i++;
-	} */
+	}
 	ft_memdel((void **)&drawing->layout);
 }
 
@@ -75,4 +74,15 @@ void	assigner(t_search_range *a, t_search_range *b)
 	a->start = b->start;
 	a->increment = b->increment;
 	a->end = b->end;
+}
+
+int	free_bundle(t_drawing *map, t_drawing *piece, char **line)
+{
+	//if (map->layout)
+		free_drawing(map, 1);
+	//if (piece->layout)
+		free_drawing(piece, 0);
+	//if (*line)
+		ft_memdel((void **)line);
+	return (0);
 }

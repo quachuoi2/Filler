@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 02:31:09 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/04 17:10:00 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/05 17:56:07 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	place_token(t_drawing *map, t_drawing *piece, t_players_specs *player, int f
 		{
 			if (try_spot(map, piece, axis, player[0].c))
 			{
-				ft_printf("%d %d\n", axis[0].start - 1, axis[1].start - 4);
+				ft_printf("$0%d %d\n", fd, axis[0].start - 1, axis[1].start - 4);
 				return (1);
 			}
 			axis[1].start += axis[1].increment;
