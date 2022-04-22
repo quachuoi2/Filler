@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 11:45:03 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/15 20:00:02 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/21 12:40:18 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,49 +18,49 @@ void	get_char(char *line)
 	{
 		if (line[10] == '1')
 		{
-			plyr[0].up_c = 'O';
-			plyr[0].lo_c = 'o';
-			plyr[1].up_c = 'X';
-			plyr[1].lo_c = 'x';
+			g_plyr[0].up_c = 'O';
+			g_plyr[0].lo_c = 'o';
+			g_plyr[1].up_c = 'X';
+			g_plyr[1].lo_c = 'x';
 		}
 		else
 		{
-			plyr[0].up_c = 'X';
-			plyr[0].lo_c = 'x';
-			plyr[1].up_c = 'O';
-			plyr[1].lo_c = 'o';
+			g_plyr[0].up_c = 'X';
+			g_plyr[0].lo_c = 'x';
+			g_plyr[1].up_c = 'O';
+			g_plyr[1].lo_c = 'o';
 		}
 	}
 }
 
 void	get_size(char *line, int type)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(!ft_isdigit(line[i]))
+	while (!ft_isdigit(line[i]))
 		i++;
 	if (type)
-		map.size.y = ft_atoi(line + i);
+		g_map.size.y = ft_atoi(line + i);
 	else
-		piece.size.y = ft_atoi(line + i);
-	while(line[i] != ' ')
+		g_piece.size.y = ft_atoi(line + i);
+	while (line[i] != ' ')
 		i++;
 	if (type)
-		map.size.x = ft_atoi(line + i + 1);
+		g_map.size.x = ft_atoi(line + i + 1);
 	else
-		piece.size.x = ft_atoi(line + i + 1);
+		g_piece.size.x = ft_atoi(line + i + 1);
 }
 
 void	check_boundaries(int i, int i2, t_boundaries *bound)
 {
-	if (i2 < bound->left_col)
-		bound->left_col = i2;
-	if (i2 > bound->rigt_col)
-		bound->rigt_col = i2;
-	if (bound->top_row == -1)
-		bound->top_row = i;
-	bound->bot_row = i;
+	if (i2 < bound->left)
+		bound->left = i2;
+	if (i2 > bound->rigt)
+		bound->rigt = i2;
+	if (bound->top == -1)
+		bound->top = i;
+	bound->bot = i;
 }
 
 void	get_players_boundaries(void)
@@ -68,23 +68,23 @@ void	get_players_boundaries(void)
 	int		i;
 	int		i2;
 
-	plyr[0].bound.left_col = map.size.x + 3;
-	plyr[0].bound.rigt_col = 0;
-	plyr[0].bound.top_row = -1;
-	plyr[1].bound.left_col = map.size.x + 3;
-	plyr[1].bound.rigt_col = 0;
-	plyr[1].bound.top_row = -1;
+	g_plyr[0].bnd.left = g_map.size.x + 3;
+	g_plyr[0].bnd.rigt = 0;
+	g_plyr[0].bnd.top = -1;
+	g_plyr[1].bnd.left = g_map.size.x + 3;
+	g_plyr[1].bnd.rigt = 0;
+	g_plyr[1].bnd.top = -1;
 	i = -1;
-	while (++i < map.size.y + 1)
+	while (++i < g_map.size.y + 1)
 	{
 		i2 = -1;
-		while (++i2 < map.size.x + 4)
+		while (++i2 < g_map.size.x + 4)
 		{
-			if (map.layout[i][i2] == plyr[0].up_c)
-				check_boundaries(i, i2, &(plyr[0].bound));
-			else if ((map.layout[i][i2] == plyr[1].up_c)
-				|| (map.layout[i][i2] == plyr[1].lo_c))
-				check_boundaries(i, i2, &(plyr[1].bound));
+			if (g_map.layout[i][i2] == g_plyr[0].up_c)
+				check_boundaries(i, i2, &(g_plyr[0].bnd));
+			else if ((g_map.layout[i][i2] == g_plyr[1].up_c)
+				|| (g_map.layout[i][i2] == g_plyr[1].lo_c))
+				check_boundaries(i, i2, &(g_plyr[1].bnd));
 		}
 	}
 }
@@ -94,15 +94,15 @@ void	get_piece_boundaries(void)
 	int		i;
 	int		i2;
 
-	piece.bound.left_col = piece.size.x;
-	piece.bound.rigt_col = 0;
-	piece.bound.top_row = -1;
+	g_piece.bnd.left = g_piece.size.x;
+	g_piece.bnd.rigt = 0;
+	g_piece.bnd.top = -1;
 	i = -1;
-	while (++i < piece.size.y)
+	while (++i < g_piece.size.y)
 	{
 		i2 = -1;
-		while (++i2 < piece.size.x)
-			if (piece.layout[i][i2] == '*')
-				check_boundaries(i, i2, &(piece.bound));
+		while (++i2 < g_piece.size.x)
+			if (g_piece.layout[i][i2] == '*')
+				check_boundaries(i, i2, &(g_piece.bnd));
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 01:20:36 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/15 20:55:47 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/21 10:19:38 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,24 @@ void	check_enemy_border(void)
 	t_coord	crd;
 
 	crd.y = -1;
-	plyr[1].e_brdr = 0;
-	while (++crd.y < map.size.y + 1)
+	g_plyr[1].e_brdr = 0;
+	while (++crd.y < g_map.size.y + 1)
 	{
 		crd.x = -1;
-		while (++crd.x < map.size.x + 4)
+		while (++crd.x < g_map.size.x + 4)
 		{
-			if ((map.layout[crd.y][crd.x] == plyr[1].up_c)
-				|| (map.layout[crd.y][crd.x] == plyr[1].lo_c))
-				{
-					if (!(plyr[1].e_brdr & 0b1000))
-						plyr[1].e_brdr
-							|= (vertcl_brdr(crd, 0, 1) << 3);
-					if (!(plyr[1].e_brdr & 0b0100))
-						plyr[1].e_brdr
-							|= (vertcl_brdr(crd, 1, 1) << 2);
-					if (!(plyr[1].e_brdr & 0b0010))
-						plyr[1].e_brdr
-							|= (horzntl_brdr(crd, 0, 1) << 1);
-					if (!(plyr[1].e_brdr & 0b0001))
-						plyr[1].e_brdr
-							|= horzntl_brdr(crd, 1, 1);
-				}
+			if ((g_map.layout[crd.y][crd.x] == g_plyr[1].up_c)
+				|| (g_map.layout[crd.y][crd.x] == g_plyr[1].lo_c))
+			{
+				if (!(g_plyr[1].e_brdr & 0b1000))
+					g_plyr[1].e_brdr |= (vertcl_brdr(crd, 0, 1) << 3);
+				if (!(g_plyr[1].e_brdr & 0b0100))
+					g_plyr[1].e_brdr |= (vertcl_brdr(crd, 1, 1) << 2);
+				if (!(g_plyr[1].e_brdr & 0b0010))
+					g_plyr[1].e_brdr |= (horzntl_brdr(crd, 0, 1) << 1);
+				if (!(g_plyr[1].e_brdr & 0b0001))
+					g_plyr[1].e_brdr |= horzntl_brdr(crd, 1, 1);
+			}
 		}
 	}
 }
@@ -52,19 +48,19 @@ int	vertcl_brdr(t_coord crd, int type, int p_type)
 	first = -1;
 	last = -1;
 	i = 0;
-	while (i < map.size.y + 1)
+	while (i < g_map.size.y + 1)
 	{
-		if ((!p_type && map.layout[i][crd.x] == plyr[0].up_c)
-			|| (p_type && ft_isalpha(map.layout[i][crd.x])))
-			{
-				if (first == -1)
-					first = i;
-				last = i;
-			}
+		if ((!p_type && g_map.layout[i][crd.x] == g_plyr[0].up_c)
+			|| (p_type && ft_isalpha(g_map.layout[i][crd.x])))
+		{
+			if (first == -1)
+				first = i;
+			last = i;
+		}
 		i++;
 	}
-	if ((type && crd.y == last && crd.y != map.size.y)
-			|| (!type && crd.y == first && crd.y != 0))
+	if ((type && crd.y == last && crd.y != g_map.size.y)
+		|| (!type && crd.y == first && crd.y != 0))
 		return (1);
 	return (0);
 }
@@ -78,10 +74,10 @@ int	horzntl_brdr(t_coord crd, int type, int p_type)
 	first = -1;
 	last = -1;
 	i = 0;
-	while (i < map.size.x + 4)
+	while (i < g_map.size.x + 4)
 	{
-		if ((!p_type && map.layout[crd.y][i] == plyr[0].up_c)
-			|| (p_type && ft_isalpha(map.layout[crd.y][i])))
+		if ((!p_type && g_map.layout[crd.y][i] == g_plyr[0].up_c)
+			|| (p_type && ft_isalpha(g_map.layout[crd.y][i])))
 		{
 			if (first == -1)
 				first = i;
@@ -89,8 +85,8 @@ int	horzntl_brdr(t_coord crd, int type, int p_type)
 		}
 		i++;
 	}
-	if ((type && crd.x == last && crd.x != map.size.x + 3)
-			|| (!type && crd.x == first && crd.x != 0))
+	if ((type && crd.x == last && crd.x != g_map.size.x + 3)
+		|| (!type && crd.x == first && crd.x != 0))
 		return (1);
 	return (0);
 }
@@ -116,31 +112,23 @@ int	brdr_val(t_coord map_crd, t_coord crd)
 	int		val;
 	int		bor_nb;
 	int		i;
-	t_coord c;
+	t_coord	c;
 
 	val = 1;
-	c.y = crd.y - map_crd.y + piece.bound.top_row;
-	c.x = crd.x - map_crd.x + piece.bound.left_col;
-	bor_nb = (brdr_counter(plyr[1].e_brdr) < 3);
-/* 	if (crd.y == 1 + 1 && crd.x == 13 + 4)
-	{
-		do_thing();
-		ft_printf("c.y: %d c.x: %d\n", c.y, c.x);
-		ft_printf("t: %d b: %d l: %d r: %d\n", piece.bound.top_row, piece.bound.bot_row, piece.bound.left_col, piece.bound.rigt_col);
-		ft_printf("%d %d\n", piece.leng, piece.width);
-	} */
-
-	i = vertcl_brdr(crd, 0, 0) ;
-	val += i * (i + ((plyr[0].pref_brdr & 2) == 0) + ((plyr[1].e_brdr & 8) != 0) * bor_nb - (c.y == piece.bound.top_row) * (piece.leng > 1)/*  * ((plyr[1].e_brdr & 4) == 0)  */);
-
+	c.y = crd.y - map_crd.y + g_piece.bnd.top;
+	c.x = crd.x - map_crd.x + g_piece.bnd.left;
+	bor_nb = (brdr_counter(g_plyr[1].e_brdr) < 3);
+	i = vertcl_brdr(crd, 0, 0);
+	val += i * (i + ((g_plyr[0].pref_brdr & 2) == 0) + ((g_plyr[1].e_brdr & 8)
+				!= 0) * bor_nb - (c.y == g_piece.bnd.top) * (g_piece.len > 1));
 	i = vertcl_brdr(crd, 1, 0);
-	val += i * (i + ((plyr[0].pref_brdr & 2) != 0) + ((plyr[1].e_brdr & 4) != 0) * bor_nb - (c.y == piece.bound.bot_row) * (piece.leng > 1)/*  * ((plyr[1].e_brdr & 8) == 0)  */);
-
+	val += i * (i + ((g_plyr[0].pref_brdr & 2) != 0) + ((g_plyr[1].e_brdr & 4)
+				!= 0) * bor_nb - (c.y == g_piece.bnd.bot) * (g_piece.len > 1));
 	i = horzntl_brdr(crd, 0, 0);
-	val += i * (i + ((plyr[0].pref_brdr & 1) == 0) + ((plyr[1].e_brdr & 2) != 0) * bor_nb - (c.x == piece.bound.left_col) * (piece.width > 1)/*  * ((plyr[1].e_brdr & 1) == 0)  */);
-
+	val += i * (i + ((g_plyr[0].pref_brdr & 1) == 0) + ((g_plyr[1].e_brdr & 2)
+				!= 0) * bor_nb - (c.x == g_piece.bnd.left) * (g_piece.wid > 1));
 	i = horzntl_brdr(crd, 1, 0);
-	val += i * (i + ((plyr[0].pref_brdr & 1) != 0) + ((plyr[1].e_brdr & 1) != 0) * bor_nb - (c.x == piece.bound.rigt_col) * (piece.width > 1));
-
+	val += i * (i + ((g_plyr[0].pref_brdr & 1) != 0) + ((g_plyr[1].e_brdr & 1)
+				!= 0) * bor_nb - (c.x == g_piece.bnd.rigt) * (g_piece.wid > 1));
 	return (val);
 }

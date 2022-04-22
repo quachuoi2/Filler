@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 07:52:46 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/13 01:51:45 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/04/22 11:20:07 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	free_stuff(void)
 	int	i;
 
 	i = 0;
-	while (i < map.size.y + 1)
+	while (i < g_map.size.y + 1)
 	{
-		ft_memdel((void **)(map.layout + i));
-		if (i < piece.size.y)
-			ft_memdel((void **)(piece.layout + i));
+		ft_memdel((void **)(g_map.layout + i));
+		if (i < g_piece.size.y)
+			ft_memdel((void **)(g_piece.layout + i));
 		i++;
 	}
-	ft_memdel((void **)&map.layout);
-	ft_memdel((void **)&piece.layout);
+	ft_memdel((void **)&g_map.layout);
+	ft_memdel((void **)&g_piece.layout);
 }
 
 void	assigner(t_search_range *a, int start, int increment, int end)
@@ -37,6 +37,6 @@ void	assigner(t_search_range *a, int start, int increment, int end)
 
 void	set_length_width(void)
 {
-	piece.width = piece.bound.rigt_col - piece.bound.left_col + 1;
-	piece.leng = piece.bound.bot_row - piece.bound.top_row + 1;
+	g_piece.wid = g_piece.bnd.rigt - g_piece.bnd.left + 1;
+	g_piece.len = g_piece.bnd.bot - g_piece.bnd.top + 1;
 }
