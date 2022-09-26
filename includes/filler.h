@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 21:30:09 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/22 11:21:43 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/09/26 07:39:37 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	filler(void);
 
 //utilities.c
 int		check_condition(int x, int mx, char piece, char map);
-void	assigner(t_search_range *a, int start, int increment, int end);
 void	free_stuff(void);
 void	set_length_width(void);
 
@@ -84,11 +83,12 @@ void	get_piece_boundaries(void);
 void	check_enemy_border(void);
 int		horzntl_brdr(t_coord crd, int type, int p_type);
 int		vertcl_brdr(t_coord crd, int type, int p_type);
-int		brdr_val(t_coord map_crd, t_coord crd);
+int		brdr_val(t_coord map_crd, t_coord crd, int counter);
 int		brdr_counter(int brdr);
 
 //axis.c
-int		set_axis_direction(t_search_range *temp_axis);
+int		set_y_axis_direction(t_search_range *temp_axis);
+int		set_x_axis_direction(t_search_range *temp_axis);
 void	set_axis_orientation(t_search_range *temp_axis);
 
 //reader.c

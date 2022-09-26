@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 01:20:36 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/21 10:19:38 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/09/26 07:40:46 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,13 +107,16 @@ int	brdr_counter(int brdr)
 	return (counter);
 }
 
-int	brdr_val(t_coord map_crd, t_coord crd)
+//?????
+int	brdr_val(t_coord map_crd, t_coord crd, int counter)
 {
 	int		val;
 	int		bor_nb;
 	int		i;
 	t_coord	c;
 
+	if (counter != 1)
+		return (0);
 	val = 1;
 	c.y = crd.y - map_crd.y + g_piece.bnd.top;
 	c.x = crd.x - map_crd.x + g_piece.bnd.left;

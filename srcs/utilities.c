@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 07:52:46 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/22 11:20:07 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/09/26 07:34:30 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ void	free_stuff(void)
 	}
 	ft_memdel((void **)&g_map.layout);
 	ft_memdel((void **)&g_piece.layout);
-}
-
-void	assigner(t_search_range *a, int start, int increment, int end)
-{
-	a->start = start;
-	a->increment = increment;
-	a->end = end;
 }
 
 void	set_length_width(void)
