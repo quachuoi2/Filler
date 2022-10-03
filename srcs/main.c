@@ -6,7 +6,7 @@
 /*   By: qnguyen <qnguyen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 18:45:45 by qnguyen           #+#    #+#             */
-/*   Updated: 2022/04/22 11:19:32 by qnguyen          ###   ########.fr       */
+/*   Updated: 2022/10/03 19:55:50 by qnguyen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ t_plyrs_specs	g_plyr[2];
 int	main(void)
 {
 	char	*line;
-	int		fd;
 
 	while (get_next_line(0, &line))
 	{
